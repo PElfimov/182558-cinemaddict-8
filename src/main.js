@@ -13,7 +13,7 @@ const makeFilterCount = () => {
 const filtersCount = makeFilterCount();
 
 const mainFilter = document.querySelector(`.main-navigation`);
-const filmList = document.querySelector(`.films-list__container`);
+const filmList = document.querySelectorAll(`.films-list__container`);
 
 
 FILTERS_NAME.forEach((elem, index) => {
@@ -21,11 +21,11 @@ FILTERS_NAME.forEach((elem, index) => {
 });
 
 
-for (let i = 1; i <= 2; i++) {
-  filmList.insertAdjacentHTML(`afterBegin`, makeTask);
+for (let i = 1; i <= 7; i++) {
+  filmList[0].insertAdjacentHTML(`afterBegin`, makeTask);
 }
 
-// filmList[1].insertAdjacentHTML(`afterBegin`, makeTask);
-// filmList[1].insertAdjacentHTML(`afterBegin`, makeTask);
+filmList[1].insertAdjacentHTML(`afterBegin`, makeTask);
+filmList[1].insertAdjacentHTML(`afterBegin`, makeTask);
 // filmList[2].insertAdjacentHTML(`afterBegin`, makeTask);
 // filmList[2].insertAdjacentHTML(`afterBegin`, makeTask);
