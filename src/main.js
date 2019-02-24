@@ -27,5 +27,5 @@ for (let i = 1; i <= 7; i++) {
 
 filmList[1].insertAdjacentHTML(`afterBegin`, makeTask);
 filmList[1].insertAdjacentHTML(`afterBegin`, makeTask);
-// filmList[2].insertAdjacentHTML(`afterBegin`, makeTask);
-// filmList[2].insertAdjacentHTML(`afterBegin`, makeTask);
+filmList[2].insertAdjacentHTML(`afterBegin`, makeTask);
+filmList[2].insertAdjacentHTML(`afterBegin`, makeTask);
