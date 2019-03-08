@@ -41,10 +41,11 @@ const mainFilter = document.querySelector(`.main-navigation`);
  */
 const addCardOnPage = (count) => {
   removeCard();
-  const filmList = document.querySelectorAll(`.films-list__container`);
-  filmList[0].insertAdjacentHTML(`beforeEnd`, getCardCollectionsMarkup(count));
-  filmList[1].insertAdjacentHTML(`beforeEnd`, getCardCollectionsMarkup(2));
-  filmList[2].insertAdjacentHTML(`beforeEnd`, getCardCollectionsMarkup(2));
+  const cardContainer = document.querySelectorAll(`.films-list__container`);
+  const popupContainer = document.querySelector(`body`);
+  getCardCollectionsMarkup(count, cardContainer[0], popupContainer);
+  getCardCollectionsMarkup(2, cardContainer[1], popupContainer);
+  getCardCollectionsMarkup(2, cardContainer[2], popupContainer);
 };
 
 
