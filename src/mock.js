@@ -50,12 +50,11 @@ const getMockCollection = (countCollection) => {
       rating: getRandomElement(mockData.rating),
       yearOfIssue: getRandomElement(mockData.yearOfIssue),
       duration: getRandomElement(mockData.duration),
-      genre: getRandomElement(...mockData.genre),
+      genre: getRandomElement([...mockData.genre]),
       imgUrl: mockData.imgUrl,
       description: getRandomElement(mockData.description),
       commentsCoutn: getRandomElement(mockData.commentsCoutn),
     };
-
     collection.push(newElement);
   }
   return collection;
