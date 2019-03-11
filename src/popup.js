@@ -1,5 +1,8 @@
-export default class Popup {
+import Component from './component.js';
+
+export default class Popup extends Component {
   constructor(data) {
+    super();
     this._imgUrl = data.imgUrl;
     this._filmTitle = data.filmTitle;
     this._director = data._director;
@@ -16,21 +19,8 @@ export default class Popup {
     this._commentsCoutn = data.commentsCoutn;
     this._age = data.age;
 
+    this._closeBtnClass = `.film-details__close-btn`;
 
-    this._element = null;
-  }
-
-  _onEditButtonClick() {
-    // eslint-disable-next-line no-unused-expressions
-    typeof this._onEdit === `function` && this._onEdit();
-  }
-
-  get element() {
-    return this._element;
-  }
-
-  set onEdit(fn) {
-    this._onEdit = fn;
   }
 
   get template() {
@@ -203,32 +193,9 @@ export default class Popup {
         </form>
       </section>`;
   }
-
-  bind() {
-    this._element.querySelector(`.film-details__close-btn`)
-      .addEventListener(`click`, this._onEditButtonClick.bind(this));
-  }
-
-  unbind() {
-    this._element.querySelector(`.film-details__close-btn`)
-      .removeEventListener(`click`, this._onEditButtonClick);
-  }
-
-  render() {
-    const createElement = (template) => {
-      const newElement = document.createElement(`div`);
-      newElement.innerHTML = template;
-      return newElement.querySelector(`section`);
-    };
-
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
-
+  _createElement(template) {
+    const newElement = document.createElement(`div`);
+    newElement.innerHTML = template;
+    return newElement.querySelector(`section`);
   }
 }
