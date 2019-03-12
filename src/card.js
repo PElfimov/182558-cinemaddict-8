@@ -1,5 +1,8 @@
-export default class Card {
+import Component from './component.js';
+
+export default class Card extends Component {
   constructor(data) {
+    super();
     this._imgUrl = data.imgUrl;
     this._filmTitle = data.filmTitle;
     this._rating = data.rating;
@@ -9,20 +12,7 @@ export default class Card {
     this._description = data.description;
     this._commentsCoutn = data.commentsCoutn;
 
-    this._element = null;
-  }
-
-  _onEditButtonClick() {
-    // eslint-disable-next-line no-unused-expressions
-    typeof this._onEdit === `function` && this._onEdit();
-  }
-
-  get element() {
-    return this._element;
-  }
-
-  set onEdit(fn) {
-    this._onEdit = fn;
+    this._closeBtnClass = `.film-card__comments`;
   }
 
   get template() {
@@ -47,29 +37,10 @@ export default class Card {
       </article>`;
   }
 
-  bind() {
-    this._element.querySelector(`.film-card__comments`)
-      .addEventListener(`click`, this._onEditButtonClick.bind(this));
+  _createElement(template) {
+    const newElement = document.createElement(`div`);
+    newElement.innerHTML = template;
+    return newElement.firstChild;
   }
 
-  unbind() {
-    this._element.querySelector(`.film-card__comments`)
-      .removeEventListener(`click`, this._onEditButtonClick);
-  }
-
-  render() {
-    const createElement = (template) => {
-      const newElement = document.createElement(`div`);
-      newElement.innerHTML = template;
-      return newElement.firstChild;
-    };
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
-  }
 }
