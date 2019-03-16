@@ -1,6 +1,5 @@
-import {
-  getRandomInt
-} from "./utils";
+import {getRandomInt} from "./utils";
+import * as moment from 'moment';
 
 /**
  * Генерация коллекции cлуяайных дат в пределах недели от текущей даты.
@@ -15,6 +14,8 @@ const getDateCollection = (countCollection) => {
   return collection;
 
 };
+
+const getRndDate = (maxSubstrakt) => moment().subtract(getRandomInt(1, maxSubstrakt), `days`).toDate();
 
 /**
  * Генерация коллекции cлуяайных рейтингов фильмов.
@@ -92,5 +93,7 @@ export {
   getRratingCollection,
   getDurationCollection,
   getDescriptionCollection,
-  getCommentsCoutnCollection
+  getCommentsCoutnCollection,
+  getRndDate,
+  getRandomInt
 };

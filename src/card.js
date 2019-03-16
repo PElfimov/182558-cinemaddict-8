@@ -11,8 +11,54 @@ export default class Card extends Component {
     this._genre = data.genre;
     this._description = data.description;
     this._commentsCoutn = data.commentsCoutn;
+    this._coments = data.coments;
+
 
     this._closeBtnClass = `.film-card__comments`;
+    this._commentsCoutn = this._coments.length;
+    this._onControlButtonClick = this._onControlButtonClick.bind(this);
+
+  }
+
+  bind() {
+    this._element.querySelector(this._closeBtnClass)
+      .addEventListener(`click`, this._onEditButtonClick);
+    this._element.querySelectorAll(`.film-card__controls-item`).forEach((elem) => {
+      elem.addEventListener(`click`, this._onControlButtonClick);
+    });
+  }
+
+  unbind() {
+    this._element.querySelector(this._closeBtnClass)
+      .removeEventListener(`click`, this._onEditButtonClick);
+    this._element.querySelectorAll(`.film-card__controls-item`).forEach((elem) => {
+      elem.removeEventListener(`click`, this._onControlButtonClick);
+    });
+  }
+
+  _onControlButtonClick(evn) {
+    evn.preventDefault();
+    let btnParam = ``;
+    if (evn.target.innerText === `WL`) {
+      btnParam = `watchlist`;
+    }
+    if (evn.target.innerText === `WTCHD`) {
+      btnParam = `watched`;
+    }
+    if (evn.target.innerText === `FAV`) {
+      btnParam = `favorite`;
+    }
+    this._filmDetailsControl[btnParam] = !this._filmDetailsControl[btnParam];
+    // eslint-disable-next-line no-unused-expressions
+    typeof this._onButtonClick === `function` && this._onButtonClick(this._filmDetailsControl);
+  }
+
+  set onButtonClick(fn) {
+    this._onButtonClick = fn;
+  }
+
+  _partialUpdate() {
+    this._element.innerHTML = this._createElement(this.template).innerHTML;
   }
 
   get template() {
@@ -42,5 +88,13 @@ export default class Card extends Component {
     newElement.innerHTML = template;
     return newElement.firstChild;
   }
+
+  update(data) {
+    // eslint-disable-next-line no-unused-expressions
+    data.coment.text && this._coments.push(data.coment);
+    this._commentsCoutn = this._coments.length;
+    this._filmDetailsControl = data.filmDetailsControl;
+  }
+
 
 }

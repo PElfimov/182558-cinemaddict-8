@@ -1,13 +1,11 @@
-import {
-  getRandomElement
-} from "./utils";
+import {getRandomElement, getRandomInt} from "./utils";
+import {getRndDate} from "./rnd_element";
 
 import {
   getDateCollection,
   getRratingCollection,
   getDurationCollection,
   getDescriptionCollection,
-  getCommentsCoutnCollection
 } from "./rnd_element";
 
 const MAX_SUM_COUNT = 6;
@@ -32,8 +30,26 @@ const mockData = {
   ]),
   imgUrl: `./images/posters/`,
   description: getDescriptionCollection(MAX_SUM_COUNT),
-  commentsCoutn: getCommentsCoutnCollection(MAX_SUM_COUNT)
-
+  coments: [
+    {
+      emoji: `grinning`,
+      text: `So long-long story, boring!`,
+      author: `Tim Macoveev`,
+      day: getRndDate(20),
+    },
+    {
+      emoji: `sleeping`,
+      text: `So Greate  best, boring!`,
+      author: `Tim Macoveev`,
+      day: getRndDate(20),
+    },
+    {
+      emoji: `neutral-face`,
+      text: `So Greate  best, boring!`,
+      author: `Tim Macoveev`,
+      day: getRndDate(20),
+    }
+  ],
 };
 
 /**
@@ -53,7 +69,9 @@ const getMockCollection = (countCollection) => {
       genre: getRandomElement([...mockData.genre]),
       imgUrl: mockData.imgUrl,
       description: getRandomElement(mockData.description),
-      commentsCoutn: getRandomElement(mockData.commentsCoutn),
+      coments: [...mockData.coments],
+      age: getRandomInt(4, 18),
+      userName: `Tony Super`,
     };
     collection.push(newElement);
   }
