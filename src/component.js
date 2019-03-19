@@ -1,12 +1,18 @@
+
 export default class Component {
   constructor() {
     if (new.target === Component) {
       throw new Error(`Can't instantiate BaseComponent, only concrete one.`);
     }
-
+    this._filmDetailsControl = {
+      'watchlist': false,
+      'watched': false,
+      'favorite': false,
+    };
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
     this._element = null;
     this._state = {};
+
   }
 
   _onEditButtonClick() {
@@ -43,9 +49,13 @@ export default class Component {
       .removeEventListener(`click`, this._onEditButtonClick);
   }
 
+  update() {}
+
   unrender() {
     this.unbind();
     this._element.remove();
     this._element = null;
   }
 }
+
+

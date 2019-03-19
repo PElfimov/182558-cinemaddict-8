@@ -1,4 +1,8 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable no-undef */
+/* eslint-disable no-return-assign */
 import Component from './component.js';
+import moment from "moment";
 
 export default class Popup extends Component {
   constructor(data) {
@@ -9,23 +13,106 @@ export default class Popup extends Component {
     this._writers = data.writers;
     this._actors = data.actors;
     this._country = data.country;
-    this._releaseDate = data.releaseDate;
     this._rating = data.rating;
     this._yourRate = data.yourRate;
     this._yearOfIssue = data.yearOfIssue;
     this._duration = data.duration;
     this._genre = data.genre;
     this._description = data.description;
-    this._commentsCoutn = data.commentsCoutn;
     this._age = data.age;
+    this._userName = data.userName;
+    this._yourScore = data.yourScore;
 
     this._closeBtnClass = `.film-details__close-btn`;
+    this._coments = data.coments;
+    this._releaseDate = moment(this._yearOfIssue).format(`Do MMMM YYYY`);
 
+  }
+
+  _processForm(formData) {
+    const entry = {
+      yourScore: Number,
+      filmDetailsControl: {
+        'watchlist': false,
+        'watched': false,
+        'favorite': false,
+      },
+      coment: {
+        text: ``,
+        emoji: ``,
+      },
+    };
+
+    const taskEditMapper = Popup.createMapper(entry);
+
+    for (const pair of formData.entries()) {
+      let [property, value] = pair;
+      // eslint-disable-next-line no-unused-expressions
+      (property === `comment-emoji`) && (property = `emoji`);
+      taskEditMapper[property] && taskEditMapper[property](value);
+    }
+    entry.coment.day = moment();
+    entry.coment.author = this._userName;
+    return entry;
+  }
+
+  _onEditButtonClick(evt) {
+    evt.preventDefault();
+    const formData = new FormData(this._element.querySelector(`.film-details__inner`));
+    const newData = this._processForm(formData);
+    // eslint-disable-next-line no-unused-expressions
+    typeof this._onEdit === `function` && this._onEdit(newData);
+    this.update(newData);
+  }
+
+  _smileFace(name) {
+    if (name === `grinning`) {
+      name = `😀`;
+    }
+    if (name === `neutral-face`) {
+      name = `😐`;
+    }
+    if (name === `sleeping`) {
+      name = `😴`;
+    }
+    return name;
+
+  }
+
+  get comentColection() {
+    let colection = ``;
+    this._coments.forEach((element) => {
+      const colectionItem = `
+      <li class="film-details__comment">
+        <span class="film-details__comment-emoji">${this._smileFace(element.emoji)}</span>
+        <div>
+          <p class="film-details__comment-text">${element.text}</p>
+          <p class="film-details__comment-info">
+            <span class="film-details__comment-author">${element.author}</span>
+            <span class="film-details__comment-day">${moment().diff(moment(element.day), `days`)} days ago</span>
+          </p>
+        </div>
+      </li>`;
+      colection += colectionItem;
+    });
+    return colection;
+  }
+
+  _ratingColection(cheskCount) {
+    let ratingColect = ``;
+    for (let i = 0; i < 10; i++) {
+      ratingColect += `
+        <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${i}" id="rating-${i}" ${ i === +cheskCount ? `checked` : ``}>
+        <label class="film-details__user-rating-label" for="rating-${i}">${i}</label>`;
+    }
+    return ratingColect;
   }
 
   get template() {
     const re = /\ /g;
     const imgUrl = this._imgUrl + this._filmTitle.toLowerCase().replace(re, `-`) + `.jpg`;
+
+
     return `
       <section class="film-details">
         <form class="film-details__inner" action="" method="get">
@@ -36,13 +123,13 @@ export default class Popup extends Component {
             <div class="film-details__poster">
               <img class="film-details__poster-img" src="${imgUrl}">
 
-              <p class="film-details__age">${this._age}</p>
+              <p class="film-details__age">Age ${this._age} +</p>
             </div>
 
             <div class="film-details__info">
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
-                  <h3 class="film-details__title">Incredibles 2</h3>
+                  <h3 class="film-details__title">${this._filmTitle}</h3>
                   <p class="film-details__title-original">Original: ${this._filmTitle}</p>
                 </div>
 
@@ -86,21 +173,19 @@ export default class Popup extends Component {
                 </tr>
               </table>
 
-              <p class="film-details__film-description">
-                The Incredibles hero family takes on a new mission, which involves a change in family roles:
-                Bob Parr (Mr Incredible) must manage the house while his wife Helen (Elastigirl) goes out to save the world.
+              <p class="film-details__film-description">${this._description }
               </p>
             </div>
           </div>
 
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${this._filmDetailsControl.watchlist ? `checked` : ``}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" checked>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${this._filmDetailsControl.watched ? `checked` : ``}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${this._filmDetailsControl.favorite ? `checked` : ``}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
 
@@ -108,16 +193,7 @@ export default class Popup extends Component {
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">1</span></h3>
 
             <ul class="film-details__comments-list">
-              <li class="film-details__comment">
-                <span class="film-details__comment-emoji">😴</span>
-                <div>
-                  <p class="film-details__comment-text">So long-long story, boring!</p>
-                  <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">Tim Macoveev</span>
-                    <span class="film-details__comment-day">3 days ago</span>
-                  </p>
-                </div>
-              </li>
+              ${this.comentColection}
             </ul>
 
             <div class="film-details__new-comment">
@@ -154,38 +230,12 @@ export default class Popup extends Component {
               </div>
 
               <section class="film-details__user-rating-inner">
-                <h3 class="film-details__user-rating-title">Incredibles 2</h3>
+                <h3 class="film-details__user-rating-title">${this._filmTitle}</h3>
 
                 <p class="film-details__user-rating-feelings">How you feel it?</p>
 
                 <div class="film-details__user-rating-score">
-                  <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="1" id="rating-1">
-                  <label class="film-details__user-rating-label" for="rating-1">1</label>
-
-                  <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="2" id="rating-2">
-                  <label class="film-details__user-rating-label" for="rating-2">2</label>
-
-                  <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="3" id="rating-3">
-                  <label class="film-details__user-rating-label" for="rating-3">3</label>
-
-                  <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="4" id="rating-4">
-                  <label class="film-details__user-rating-label" for="rating-4">4</label>
-
-                  <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="5" id="rating-5" checked>
-                  <label class="film-details__user-rating-label" for="rating-5">5</label>
-
-                  <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="6" id="rating-6">
-                  <label class="film-details__user-rating-label" for="rating-6">6</label>
-
-                  <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="7" id="rating-7">
-                  <label class="film-details__user-rating-label" for="rating-7">7</label>
-
-                  <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="8" id="rating-8">
-                  <label class="film-details__user-rating-label" for="rating-8">8</label>
-
-                  <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="9" id="rating-9">
-                  <label class="film-details__user-rating-label" for="rating-9">9</label>
-
+                  ${this._ratingColection(this._yourScore) }
                 </div>
               </section>
             </div>
@@ -197,5 +247,24 @@ export default class Popup extends Component {
     const newElement = document.createElement(`div`);
     newElement.innerHTML = template;
     return newElement.querySelector(`section`);
+  }
+
+  static createMapper(target) {
+    // eslint-disable-next-line no-unused-expressions
+    return {
+      watched: (value) => target.filmDetailsControl.watched = value,
+      watchlist: (value) => target.filmDetailsControl.watchlist = value,
+      favorite: (value) => target.filmDetailsControl.favorite = value,
+      emoji: (value) => target.coment.emoji = value,
+      comment: (value) => target.coment.text = value,
+      score: (value) => target.yourScore = value,
+    };
+  }
+
+  update(data) {
+    this._yourScore = data.yourScore;
+    this._filmDetailsControl = data.filmDetailsControl;
+
+
   }
 }

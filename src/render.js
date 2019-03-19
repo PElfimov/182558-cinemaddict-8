@@ -22,7 +22,18 @@ const getCardCollectionsMarkup = (count, cardContainer, popupContainer) => {
       popupContainer.appendChild(popupComponent.render());
     };
 
-    popupComponent.onEdit = () => {
+    cardComponent.onButtonClick = (newObject) => {
+      item.filmDetailsControl = newObject;
+      popupComponent.update(item);
+      console.log(item);
+    };
+
+    popupComponent.onEdit = (newObject) => {
+      item = {...newObject};
+      cardComponent.update(item);
+      cardComponent.unbind()
+      cardComponent._partialUpdate();
+      cardComponent.bind();
       popupContainer.removeChild(popupComponent.element);
       popupComponent.unrender();
     };
