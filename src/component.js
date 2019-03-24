@@ -4,11 +4,6 @@ export default class Component {
     if (new.target === Component) {
       throw new Error(`Can't instantiate BaseComponent, only concrete one.`);
     }
-    this._filmDetailsControl = {
-      'watchlist': false,
-      'watched': false,
-      'favorite': false,
-    };
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
     this._element = null;
     this._state = {};
@@ -22,6 +17,12 @@ export default class Component {
 
   get element() {
     return this._element;
+  }
+
+  _createElement(template) {
+    const newElement = document.createElement(`div`);
+    newElement.innerHTML = template;
+    return newElement.querySelector(`section`);
   }
 
 
