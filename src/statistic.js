@@ -44,6 +44,7 @@ export default class Statistic {
     this._totalDurationHours = moment.duration(time, `minutes`).hours();
     this._totalDurationMinutes = moment.duration(time, `minutes`).minutes();
     this._gengeColection = [...gengeSet];
+    // eslint-disable-next-line no-unused-vars
     Object.entries(gengeOdj).forEach((element, index) => {
       this._gengeColectionData.push(element[1]);
     });
@@ -54,8 +55,7 @@ export default class Statistic {
         this._topGengeName = element[0];
       }
     });
-    console.log ([...this._gengeColectionData]);
-    console.log (this._topGengeName);
+
 
   }
 
@@ -127,6 +127,7 @@ export default class Statistic {
     // Обязательно рассчитайте высоту canvas, она зависит от количества элементов диаграммы
     const BAR_HEIGHT = 50;
     statisticCtx.height = BAR_HEIGHT * 5;
+    // eslint-disable-next-line no-unused-vars
     const myChart = new Chart(statisticCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
@@ -146,8 +147,8 @@ export default class Statistic {
               size: 20
             },
             color: `#ffffff`,
-            anchor: 'start',
-            align: 'start',
+            anchor: `start`,
+            align: `start`,
             offset: 40,
           }
         },
@@ -183,7 +184,7 @@ export default class Statistic {
         }
       }
     });
-  };
+  }
 
 
 }

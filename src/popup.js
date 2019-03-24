@@ -16,7 +16,7 @@ export default class Popup extends Component {
     this._rating = data.rating;
     this._yourRate = data.yourRate;
     this._yearOfIssue = data.yearOfIssue;
-    this._duration = (moment.duration(data.duration, `minutes`).hours() +`h `+  moment.duration(data.duration, `minutes`).minutes() + `m`);
+    this._duration = (moment.duration(data.duration, `minutes`).hours() + `h ` + moment.duration(data.duration, `minutes`).minutes() + `m`);
     this._genre = data.genre;
     this._description = data.description;
     this._age = data.age;
@@ -29,7 +29,6 @@ export default class Popup extends Component {
     this._releaseDate = moment(this._yearOfIssue).format(`Do MMMM YYYY`);
 
   }
-
 
 
   _processForm(formData) {

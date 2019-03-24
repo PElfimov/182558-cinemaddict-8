@@ -8,7 +8,7 @@ export default class Card extends Component {
     this._filmTitle = data.filmTitle;
     this._rating = data.rating;
     this._yearOfIssue = data.yearOfIssue;
-    this._duration = (moment.duration(data.duration, `minutes`).hours() +`h `+  moment.duration(data.duration, `minutes`).minutes() + `m`);
+    this._duration = (moment.duration(data.duration, `minutes`).hours() + `h ` + moment.duration(data.duration, `minutes`).minutes() + `m`);
     this._genre = data.genre;
     this._description = data.description;
     this._commentsCoutn = data.commentsCoutn;

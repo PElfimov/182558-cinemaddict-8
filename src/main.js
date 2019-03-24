@@ -27,8 +27,6 @@ const filmConteiner = document.querySelector(`.films`);
 const mainConteiner = document.querySelector(`.main`);
 
 
-
-
 const delClass = (className, object) => {
   // eslint-disable-next-line no-unused-expressions
   object.classList.contains(className) && object.classList.remove(className);
@@ -44,10 +42,11 @@ const dellElement = (className) => {
   mainConteiner.querySelector(className) && mainConteiner.querySelector(className).remove();
 };
 
+// eslint-disable-next-line consistent-return
 const filterTasks = (filterName) => {
   switch (filterName) {
     case `all movies`:
-      delClass(`visually-hidden`, filmConteiner)
+      delClass(`visually-hidden`, filmConteiner);
       dellElement(`.statistic`);
 
       return dataColection;
@@ -73,6 +72,7 @@ const filterTasks = (filterName) => {
       const stattistik = new Statistic(dataColection);
       const ststistikElement = stattistik.render();
       mainConteiner.appendChild(ststistikElement);
+      // eslint-disable-next-line no-unused-expressions
       stattistik.renderStat;
   }
 };
@@ -87,6 +87,7 @@ const filterTasks = (filterName) => {
   filterContainer.appendChild(filterComponent.render());
   filterComponent.onFilter = (data) => {
     removeCard();
+    // eslint-disable-next-line no-unused-expressions
     filterTasks(data) && addCardOnPage(filterTasks(data));
   };
 });
