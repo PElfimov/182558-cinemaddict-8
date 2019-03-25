@@ -77,7 +77,7 @@ const getMockCollection = (countCollection) => {
       coments: [...mockData.coments],
       age: getRandomInt(4, 18),
       userName: `Tony Super`,
-      filmDetailsControl: {...mockData.filmDetailsControl},
+      filmDetailsControl: Object.assign({}, mockData.filmDetailsControl),
     };
     collection.push(newElement);
   }
