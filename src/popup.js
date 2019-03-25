@@ -16,18 +16,20 @@ export default class Popup extends Component {
     this._rating = data.rating;
     this._yourRate = data.yourRate;
     this._yearOfIssue = data.yearOfIssue;
-    this._duration = data.duration;
+    this._duration = (moment.duration(data.duration, `minutes`).hours() + `h ` + moment.duration(data.duration, `minutes`).minutes() + `m`);
     this._genre = data.genre;
     this._description = data.description;
     this._age = data.age;
     this._userName = data.userName;
     this._yourScore = data.yourScore;
+    this._filmDetailsControl = data.filmDetailsControl;
 
     this._closeBtnClass = `.film-details__close-btn`;
     this._coments = data.coments;
     this._releaseDate = moment(this._yearOfIssue).format(`Do MMMM YYYY`);
 
   }
+
 
   _processForm(formData) {
     const entry = {
@@ -243,11 +245,7 @@ export default class Popup extends Component {
         </form>
       </section>`;
   }
-  _createElement(template) {
-    const newElement = document.createElement(`div`);
-    newElement.innerHTML = template;
-    return newElement.querySelector(`section`);
-  }
+
 
   static createMapper(target) {
     // eslint-disable-next-line no-unused-expressions

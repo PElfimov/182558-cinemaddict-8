@@ -1,4 +1,5 @@
 import Component from './component.js';
+import moment from "moment";
 
 export default class Card extends Component {
   constructor(data) {
@@ -7,11 +8,12 @@ export default class Card extends Component {
     this._filmTitle = data.filmTitle;
     this._rating = data.rating;
     this._yearOfIssue = data.yearOfIssue;
-    this._duration = data.duration;
+    this._duration = (moment.duration(data.duration, `minutes`).hours() + `h ` + moment.duration(data.duration, `minutes`).minutes() + `m`);
     this._genre = data.genre;
     this._description = data.description;
     this._commentsCoutn = data.commentsCoutn;
     this._coments = data.coments;
+    this._filmDetailsControl = data.filmDetailsControl;
 
 
     this._closeBtnClass = `.film-card__comments`;

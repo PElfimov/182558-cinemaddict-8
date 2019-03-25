@@ -38,7 +38,7 @@ const getRratingCollection = (countCollection) => {
 const getDurationCollection = (countCollection) => {
   const collection = [];
   for (let i = 0; i < countCollection; i++) {
-    collection.push(`${getRandomInt(1, 5)}h ${getRandomInt(1, 60)}m`);
+    collection.push(getRandomInt(60, 180));
   }
   return collection;
 };

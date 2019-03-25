@@ -10,7 +10,7 @@ import {
 
 const MAX_SUM_COUNT = 6;
 const mockData = {
-  FILTERS_NAME: new Set([`all movies`, `watchlist`, `history`, `favorites`]),
+  FILTERS_NAME: new Set([`all movies`, `watchlist`, `history`, `favorites`, `stats`]),
   filmTitle: [
     `Accused`,
     `Blackmail`,
@@ -23,7 +23,7 @@ const mockData = {
   yearOfIssue: getDateCollection(MAX_SUM_COUNT),
   duration: getDurationCollection(MAX_SUM_COUNT),
   genre: new Set([
-    `Comedy`, `Action`, `Adventure`, `Animation`, `Biography`, ` Comedy`,
+    `Comedy`, `Action`, `Adventure`, `Animation`, `Biography`,
     `Crime`, `Documentary`, `Drama`, `Family`, `Fantasy`, `Film Noir`, `History`,
     `Horror`, `Music`, `Musical`, `Mystery`, `Romance`, `Sci-Fi`,
     `Short`, `Sport`, `Superhero`, `Thriller`, `War`, `Western`
@@ -50,6 +50,11 @@ const mockData = {
       day: getRndDate(20),
     }
   ],
+  filmDetailsControl: {
+    'watchlist': false,
+    'watched': false,
+    'favorite': false,
+  },
 };
 
 /**
@@ -72,6 +77,7 @@ const getMockCollection = (countCollection) => {
       coments: [...mockData.coments],
       age: getRandomInt(4, 18),
       userName: `Tony Super`,
+      filmDetailsControl: Object.assign({}, mockData.filmDetailsControl),
     };
     collection.push(newElement);
   }
