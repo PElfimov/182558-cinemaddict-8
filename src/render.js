@@ -54,6 +54,10 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
 
     };
 
+    popupComponent.onRadioButton = (newObject) => {
+
+    };
+
   });
 };
 export {

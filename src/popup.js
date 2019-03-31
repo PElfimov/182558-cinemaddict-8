@@ -26,7 +26,7 @@ export default class Popup extends Component {
     this._closeBtnClass = `.film-details__close-btn`;
     this._coments = data.coments;
     this._releaseDate = moment(this._yearOfIssue).format(`Do MMMM YYYY`);
-
+    this._onEditRadioButtonClick = this._onEditRadioButtonClick.bind(this);
   }
 
 
@@ -64,6 +64,19 @@ export default class Popup extends Component {
     // eslint-disable-next-line no-unused-expressions
     typeof this._onEdit === `function` && this._onEdit(newData);
     this.update(newData);
+  }
+
+  _onEditRadioButtonClick(evt) {
+    evt.preventDefault();
+    const formData = new FormData(this._element.querySelector(`.film-details__inner`));
+    const newData = this._processForm(formData);
+    // eslint-disable-next-line no-unused-expressions
+    typeof this._onEdit === `function` && this._onEdit(newData);
+    this.update(newData);
+  }
+
+  set onRadioButton(fn) {
+    this._onRadioButton = fn;
   }
 
   _smileFace(name) {
@@ -110,7 +123,7 @@ export default class Popup extends Component {
   }
 
   get template() {
-       return `
+    return `
       <section class="film-details">
         <form class="film-details__inner" action="" method="get">
           <div class="film-details__close">
@@ -254,10 +267,18 @@ export default class Popup extends Component {
     };
   }
 
+  bind() {
+    this._element.querySelector(this._closeBtnClass)
+      .addEventListener(`click`, this._onEditButtonClick);
+  }
+
+  unbind() {
+    this._element.querySelector(this._closeBtnClass)
+      .removeEventListener(`click`, this._onEditButtonClick);
+  }
+
   update(data) {
     this._yourScore = data.yourScore;
     this._filmDetailsControl = data.filmDetailsControl;
-
-
   }
 }
