@@ -1,6 +1,10 @@
-
+/* eslint-disable no-shadow */
+/* eslint-disable no-undef */
 import Card from "./card.js";
 import Popup from "./popup.js";
+import {
+  api
+} from "./main.js";
 
 
 /**
@@ -21,19 +25,33 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
     };
 
     cardComponent.onButtonClick = (newObject) => {
-      item.filmDetailsControl = newObject;
-      popupComponent.update(item);
+      api.updateTask({
+        id: item.number,
+        data: item.toRAW()
+      })
+        .then((item) => {
+          item.filmDetailsControl = newObject;
+          popupComponent.update(item);
+        });
     };
 
     popupComponent.onEdit = (newObject) => {
-      item.coment = newObject.coment;
+
       item.filmDetailsControl = newObject.filmDetailsControl;
-      cardComponent.update(item);
-      cardComponent.unbind();
-      cardComponent._partialUpdate();
-      cardComponent.bind();
-      popupContainer.removeChild(popupComponent.element);
-      popupComponent.unrender();
+      api.updateTask({
+        id: item.number,
+        data: item.toRAW()
+      })
+        .then((item) => {
+          item.coment = newObject.coment;
+          cardComponent.update(item);
+          cardComponent.unbind();
+          cardComponent._partialUpdate();
+          cardComponent.bind();
+          popupContainer.removeChild(popupComponent.element);
+          popupComponent.unrender();
+        });
+
     };
 
   });

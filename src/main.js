@@ -1,11 +1,8 @@
+/* eslint-disable consistent-return */
 import Filter from './filter.js';
 import {
   getCardCollectionsMarkup
 } from './render';
-import {
-  mockData,
-  getMockCollection
-} from './mock';
 import Statistic from './statistic';
 import API from './api';
 
@@ -19,16 +16,25 @@ const removeCard = () => {
 };
 
 
-const topRatedColection = getMockCollection(2);
-const mostCommented = getMockCollection(2);
-
 const filterContainer = document.querySelector(`.main-navigation`);
 const filmConteiner = document.querySelector(`.films`);
 const mainConteiner = document.querySelector(`.main`);
 const FILTERS_NAME = [`all movies`, `watchlist`, `history`, `favorites`, `stats`];
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
 const END_POINT = `https://es8-demo-srv.appspot.com/moowle/`;
-const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+const api = new API({
+  endPoint: END_POINT,
+  authorization: AUTHORIZATION
+});
+
+
+const textAlert = document.createElement(`h2`);
+textAlert.textContent = `Loading movies...`;
+document.querySelector(`.films-list__container`).appendChild(textAlert);
+
+const onError = (error) => {
+  textAlert.textContent = `Something went wrong while loading movies. Check your connection or try again later ${error}`;
+};
 
 const delClass = (className, object) => {
   // eslint-disable-next-line no-unused-expressions
@@ -116,6 +122,13 @@ const addCardOnPage = (data) => {
 
 api.getTasks()
   .then((tasks) => {
+    textAlert.remove();
     addCardOnPage(tasks);
     addFilterr(tasks);
-  });
+  })
+  .catch(onError);
+
+
+export {
+  api
+};

@@ -58,14 +58,15 @@ export default class API {
     data
   }) {
     return this._load({
-      url: `tasks/${id}`,
+      url: `movies/${id}`,
       method: Method.PUT,
       body: JSON.stringify(data),
       headers: new Headers({
         'Content-Type': `application/json`
       })
     })
-      .then(toJSON);
+      .then(toJSON)
+      .then(ModelTask.parseTask);
   }
 
   deleteTask({
