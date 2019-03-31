@@ -9,15 +9,14 @@ export default class Popup extends Component {
     super();
     this._imgUrl = data.imgUrl;
     this._filmTitle = data.filmTitle;
-    this._director = data._director;
+    this._director = data.director;
     this._writers = data.writers;
-    this._actors = data.actors;
+    this._actors = data.actors.join(`, `);
     this._country = data.country;
     this._rating = data.rating;
-    this._yourRate = data.yourRate;
     this._yearOfIssue = data.yearOfIssue;
     this._duration = (moment.duration(data.duration, `minutes`).hours() + `h ` + moment.duration(data.duration, `minutes`).minutes() + `m`);
-    this._genre = data.genre;
+    this._genre = data.genre.join(`, `);
     this._description = data.description;
     this._age = data.age;
     this._userName = data.userName;
@@ -104,18 +103,14 @@ export default class Popup extends Component {
     let ratingColect = ``;
     for (let i = 0; i < 10; i++) {
       ratingColect += `
-        <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${i}" id="rating-${i}" ${ i === +cheskCount ? `checked` : ``}>
+        <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${i}" id="rating-${i}" ${ i === Math.round(+cheskCount) ? `checked` : ``}>
         <label class="film-details__user-rating-label" for="rating-${i}">${i}</label>`;
     }
     return ratingColect;
   }
 
   get template() {
-    const re = /\ /g;
-    const imgUrl = this._imgUrl + this._filmTitle.toLowerCase().replace(re, `-`) + `.jpg`;
-
-
-    return `
+       return `
       <section class="film-details">
         <form class="film-details__inner" action="" method="get">
           <div class="film-details__close">
@@ -123,7 +118,7 @@ export default class Popup extends Component {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="${imgUrl}">
+              <img class="film-details__poster-img" src="${this._imgUrl}">
 
               <p class="film-details__age">Age ${this._age} +</p>
             </div>
@@ -137,7 +132,7 @@ export default class Popup extends Component {
 
                 <div class="film-details__rating">
                   <p class="film-details__total-rating">${this._rating}</p>
-                  <p class="film-details__user-rating">Y${this._yourRate}</p>
+                  <p class="film-details__user-rating">${this._yourScore}</p>
                 </div>
               </div>
 
@@ -156,7 +151,7 @@ export default class Popup extends Component {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${this._releaseDate} (USA)</td>
+                  <td class="film-details__cell">${this._releaseDate} (${this._country})</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
