@@ -59,7 +59,7 @@ export default class Card extends Component {
     this._onButtonClick = fn;
   }
 
-  _partialUpdate() {
+  partialUpdate() {
     this._element.innerHTML = this._createElement(this.template).innerHTML;
   }
 

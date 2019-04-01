@@ -46,7 +46,7 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
           item.coment = newObject.coment;
           cardComponent.update(item);
           cardComponent.unbind();
-          cardComponent._partialUpdate();
+          cardComponent.partialUpdate();
           cardComponent.bind();
           popupContainer.removeChild(popupComponent.element);
           popupComponent.unrender();
@@ -54,8 +54,46 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
 
     };
 
-    popupComponent.onRadioButton = (newObject) => {
+    popupComponent.onSentComment = (newObject) => {
+      popupComponent.block();
+      item.filmDetailsControl = newObject.filmDetailsControl;
+      api.updateTask({
+        id: item.number,
+        data: item.toRAW()
+      })
+        .then((item) => {
+          item.coment = newObject.coment;
+          popupComponent.update(item);
+          popupComponent.unbind();
+          popupComponent.partialUpdate();
+          popupComponent.bind();
+          popupComponent.unblock();
+        })
+        .catch(()=>{
+          popupComponent.shakeReitingTextForm();
+          popupComponent.unblock();
+        });
 
+    };
+
+    popupComponent.onRadioButton = (newObject) => {
+      item.yourScore = newObject.yourScore;
+      popupComponent.block();
+      api.updateTask({
+        id: item.number,
+        data: item.toRAW()
+      })
+        .then((item) => {
+          popupComponent.update(item);
+          popupComponent.unbind();
+          popupComponent.partialUpdate();
+          popupComponent.bind();
+          popupComponent.unblock();
+        })
+        .catch(()=>{
+          popupComponent.shakeReitingForm();
+          popupComponent.unblock();
+        });
     };
 
   });
