@@ -93,8 +93,6 @@ export default class API {
     })
       .then(checkStatus)
       .catch((err) => {
-        // eslint-disable-next-line no-console
-        console.error(`fetch error: ${err}`);
         throw err;
       });
   }
