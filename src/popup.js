@@ -9,15 +9,14 @@ export default class Popup extends Component {
     super();
     this._imgUrl = data.imgUrl;
     this._filmTitle = data.filmTitle;
-    this._director = data._director;
+    this._director = data.director;
     this._writers = data.writers;
-    this._actors = data.actors;
+    this._actors = data.actors.join(`, `);
     this._country = data.country;
     this._rating = data.rating;
-    this._yourRate = data.yourRate;
     this._yearOfIssue = data.yearOfIssue;
     this._duration = (moment.duration(data.duration, `minutes`).hours() + `h ` + moment.duration(data.duration, `minutes`).minutes() + `m`);
-    this._genre = data.genre;
+    this._genre = data.genre.join(`, `);
     this._description = data.description;
     this._age = data.age;
     this._userName = data.userName;
@@ -27,6 +26,9 @@ export default class Popup extends Component {
     this._closeBtnClass = `.film-details__close-btn`;
     this._coments = data.coments;
     this._releaseDate = moment(this._yearOfIssue).format(`Do MMMM YYYY`);
+    this._onEditRadioButtonClick = this._onEditRadioButtonClick.bind(this);
+    this._onSentCommentKeyDown = this._onSentCommentKeyDown.bind(this);
+    this._shakeStyleEnebled = false;
 
   }
 
@@ -67,6 +69,33 @@ export default class Popup extends Component {
     this.update(newData);
   }
 
+  _onEditRadioButtonClick(evt) {
+    evt.preventDefault();
+    const newData = {};
+    newData.yourScore = evt.target.innerText;
+    // eslint-disable-next-line no-unused-expressions
+    typeof this._onRadioButton === `function` && this._onRadioButton(newData);
+  }
+
+  _onSentCommentKeyDown(evt) {
+    if (evt.ctrlKey === true & evt.keyCode === 13) {
+      evt.preventDefault();
+      const formData = new FormData(this._element.querySelector(`.film-details__inner`));
+      const newData = this._processForm(formData);
+      // eslint-disable-next-line no-unused-expressions
+      typeof this._onSentComment === `function` && this._onSentComment(newData);
+    }
+  }
+
+  set onSentComment(fn) {
+    this._onSentComment = fn;
+  }
+
+
+  set onRadioButton(fn) {
+    this._onRadioButton = fn;
+  }
+
   _smileFace(name) {
     if (name === `grinning`) {
       name = `😀`;
@@ -104,17 +133,13 @@ export default class Popup extends Component {
     let ratingColect = ``;
     for (let i = 0; i < 10; i++) {
       ratingColect += `
-        <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${i}" id="rating-${i}" ${ i === +cheskCount ? `checked` : ``}>
+        <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${i}" id="rating-${i}" ${ i === Math.round(+cheskCount) ? `checked` : ``}>
         <label class="film-details__user-rating-label" for="rating-${i}">${i}</label>`;
     }
     return ratingColect;
   }
 
   get template() {
-    const re = /\ /g;
-    const imgUrl = this._imgUrl + this._filmTitle.toLowerCase().replace(re, `-`) + `.jpg`;
-
-
     return `
       <section class="film-details">
         <form class="film-details__inner" action="" method="get">
@@ -123,7 +148,7 @@ export default class Popup extends Component {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="${imgUrl}">
+              <img class="film-details__poster-img" src="${this._imgUrl}">
 
               <p class="film-details__age">Age ${this._age} +</p>
             </div>
@@ -137,7 +162,7 @@ export default class Popup extends Component {
 
                 <div class="film-details__rating">
                   <p class="film-details__total-rating">${this._rating}</p>
-                  <p class="film-details__user-rating">Y${this._yourRate}</p>
+                  <p class="film-details__user-rating">${this._yourScore}</p>
                 </div>
               </div>
 
@@ -156,7 +181,7 @@ export default class Popup extends Component {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${this._releaseDate} (USA)</td>
+                  <td class="film-details__cell">${this._releaseDate} (${this._country})</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
@@ -259,10 +284,102 @@ export default class Popup extends Component {
     };
   }
 
+  partialUpdate() {
+    this._element.innerHTML = this._createElement(this.template).innerHTML;
+  }
+
+  _shake(element) {
+    const template = `<style>
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+
+        10%,
+        30%,
+        50%,
+        70%,
+        90% {
+          transform: translateX(-5px);
+        }
+
+        20%,
+        40%,
+        60%,
+        80% {
+          transform: translateX(5px);
+        }
+      }
+      .shake {
+        animation: shake 0.6s;
+      }
+    </style>`;
+    if (!this._shakeStyleEnebled) {
+      this._shakeStyleEnebled = true;
+      document.querySelector(`head`).insertAdjacentHTML(`beforeend`, template);
+    }!element.classList.contains(`shake`) ? element.classList.add(`shake`) : element.classList.remove(`shake`);
+
+  }
+
+  shakeReitingForm() {
+    const reitingForm = this._element.querySelector(`.film-details__user-rating-score`);
+    reitingForm.style = `background-color: red;`;
+    this._shake(reitingForm);
+  }
+
+  shakeReitingTextForm() {
+    const reitingForm = this._element.querySelector(`.film-details__comment-label`);
+    reitingForm.style = `border:2px solid red;`;
+    this._shake(reitingForm);
+  }
+
+  block() {
+    this.element.querySelectorAll(`.film-details__user-rating-input`).forEach((elem) => {
+      elem.disabled = true;
+    });
+    this.element.querySelectorAll(`.film-details__control-input`).forEach((elem) => {
+      elem.disabled = true;
+    });
+    this.element.querySelector(`.film-details__comment-input`).disabled = true;
+  }
+
+  unblock() {
+    this.element.querySelectorAll(`.film-details__user-rating-input`).forEach((elem) => {
+      elem.disabled = false;
+    });
+    this.element.querySelectorAll(`.film-details__control-input`).forEach((elem) => {
+      elem.disabled = false;
+    });
+    this.element.querySelector(`.film-details__comment-input`).disabled = false;
+  }
+
+  bind() {
+    this._element.querySelector(this._closeBtnClass)
+      .addEventListener(`click`, this._onEditButtonClick);
+    this._element.querySelector(`.film-details__comment-input`)
+      .addEventListener(`keydown`, this._onSentCommentKeyDown);
+
+    this._element.querySelectorAll(`.film-details__user-rating-label`).forEach((elem) => {
+      elem.addEventListener(`click`, this._onEditRadioButtonClick);
+    });
+  }
+
+  unbind() {
+    this._element.querySelector(this._closeBtnClass)
+      .removeEventListener(`click`, this._onEditButtonClick);
+    this._element.querySelectorAll(`.film-details__user-rating-label`).forEach((elem) => {
+      elem.removeEventListener(`click`, this._onEditRadioButtonClick);
+    });
+  }
+
   update(data) {
-    this._yourScore = data.yourScore;
-    this._filmDetailsControl = data.filmDetailsControl;
-
-
+    if (data.yourScore) {
+      this._yourScore = data.yourScore;
+    }
+    if (data.filmDetailsControl) {
+      this._filmDetailsControl = data.filmDetailsControl;
+    }
+    data.coment.text && this._coments.push(data.coment);
   }
 }

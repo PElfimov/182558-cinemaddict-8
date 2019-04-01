@@ -40,15 +40,6 @@ export default class Component {
     return this._element;
   }
 
-  bind() {
-    this._element.querySelector(this._closeBtnClass)
-      .addEventListener(`click`, this._onEditButtonClick);
-  }
-
-  unbind() {
-    this._element.querySelector(this._closeBtnClass)
-      .removeEventListener(`click`, this._onEditButtonClick);
-  }
 
   update() {}
 

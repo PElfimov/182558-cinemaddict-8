@@ -1,6 +1,10 @@
-
+/* eslint-disable no-shadow */
+/* eslint-disable no-undef */
 import Card from "./card.js";
 import Popup from "./popup.js";
+import {
+  api
+} from "./main.js";
 
 
 /**
@@ -21,19 +25,75 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
     };
 
     cardComponent.onButtonClick = (newObject) => {
-      item.filmDetailsControl = newObject;
-      popupComponent.update(item);
+      api.updateTask({
+        id: item.number,
+        data: item.toRAW()
+      })
+        .then((item) => {
+          item.filmDetailsControl = newObject;
+          popupComponent.update(item);
+        });
     };
 
     popupComponent.onEdit = (newObject) => {
-      item.coment = newObject.coment;
+
       item.filmDetailsControl = newObject.filmDetailsControl;
-      cardComponent.update(item);
-      cardComponent.unbind();
-      cardComponent._partialUpdate();
-      cardComponent.bind();
-      popupContainer.removeChild(popupComponent.element);
-      popupComponent.unrender();
+      api.updateTask({
+        id: item.number,
+        data: item.toRAW()
+      })
+        .then((item) => {
+          item.coment = newObject.coment;
+          cardComponent.update(item);
+          cardComponent.unbind();
+          cardComponent.partialUpdate();
+          cardComponent.bind();
+          popupContainer.removeChild(popupComponent.element);
+          popupComponent.unrender();
+        });
+
+    };
+
+    popupComponent.onSentComment = (newObject) => {
+      popupComponent.block();
+      item.filmDetailsControl = newObject.filmDetailsControl;
+      api.updateTask({
+        id: item.number,
+        data: item.toRAW()
+      })
+        .then((item) => {
+          item.coment = newObject.coment;
+          popupComponent.update(item);
+          popupComponent.unbind();
+          popupComponent.partialUpdate();
+          popupComponent.bind();
+          popupComponent.unblock();
+        })
+        .catch(()=>{
+          popupComponent.shakeReitingTextForm();
+          popupComponent.unblock();
+        });
+
+    };
+
+    popupComponent.onRadioButton = (newObject) => {
+      item.yourScore = newObject.yourScore;
+      popupComponent.block();
+      api.updateTask({
+        id: item.number,
+        data: item.toRAW()
+      })
+        .then((item) => {
+          popupComponent.update(item);
+          popupComponent.unbind();
+          popupComponent.partialUpdate();
+          popupComponent.bind();
+          popupComponent.unblock();
+        })
+        .catch(()=>{
+          popupComponent.shakeReitingForm();
+          popupComponent.unblock();
+        });
     };
 
   });
