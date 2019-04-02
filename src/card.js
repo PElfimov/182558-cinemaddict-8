@@ -51,8 +51,9 @@ export default class Card extends Component {
       btnParam = `favorite`;
     }
     this._filmDetailsControl[btnParam] = !this._filmDetailsControl[btnParam];
-    // eslint-disable-next-line no-unused-expressions
-    typeof this._onButtonClick === `function` && this._onButtonClick(this._filmDetailsControl);
+    if (typeof this._onButtonClick === `function`) {
+      this._onButtonClick(this._filmDetailsControl);
+    }
   }
 
   set onButtonClick(fn) {
@@ -90,8 +91,9 @@ export default class Card extends Component {
   }
 
   update(data) {
-    // eslint-disable-next-line no-unused-expressions
-    data.coment.text && this._coments.push(data.coment);
+    if (data.coment.text) {
+      this._coments.push(data.coment);
+    }
     this._commentsCoutn = this._coments.length;
     this._filmDetailsControl = data.filmDetailsControl;
   }

@@ -19,10 +19,10 @@ export default class Filter extends Component {
   }
 
   _onFilterButtonClick() {
-    // eslint-disable-next-line no-unused-expressions
     const filtersName = this._name;
-    // eslint-disable-next-line no-unused-expressions
-    typeof this._onFilter === `function` && this._onFilter(filtersName);
+    if (typeof this._onFilter === `function`) {
+      this._onFilter(filtersName);
+    }
   }
 
   set onFilter(fn) {
