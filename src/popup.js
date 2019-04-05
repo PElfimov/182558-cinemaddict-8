@@ -380,6 +380,8 @@ export default class Popup extends Component {
     if (data.filmDetailsControl) {
       this._filmDetailsControl = data.filmDetailsControl;
     }
-    data.coment.text && this._coments.push(data.coment);
+    if (data.coment) {
+      this._coments.push(data.coment);
+    }
   }
 }
