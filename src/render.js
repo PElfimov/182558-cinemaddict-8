@@ -1,5 +1,3 @@
-/* eslint-disable no-shadow */
-/* eslint-disable no-undef */
 import Card from "./card.js";
 import Popup from "./popup.js";
 import {
@@ -29,9 +27,9 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
         id: item.number,
         data: item.toRAW()
       })
-        .then((item) => {
+        .then((data) => {
           item.filmDetailsControl = newObject;
-          popupComponent.update(item);
+          popupComponent.update(data);
         });
     };
 
@@ -42,9 +40,9 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
         id: item.number,
         data: item.toRAW()
       })
-        .then((item) => {
-          item.coment = newObject.coment;
-          cardComponent.update(item);
+        .then((data) => {
+          data.coment = newObject.coment;
+          cardComponent.update(data);
           cardComponent.unbind();
           cardComponent.partialUpdate();
           cardComponent.bind();
@@ -61,9 +59,9 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
         id: item.number,
         data: item.toRAW()
       })
-        .then((item) => {
-          item.coment = newObject.coment;
-          popupComponent.update(item);
+        .then((data) => {
+          data.coment = newObject.coment;
+          popupComponent.update(data);
           popupComponent.unbind();
           popupComponent.partialUpdate();
           popupComponent.bind();
@@ -83,8 +81,8 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
         id: item.number,
         data: item.toRAW()
       })
-        .then((item) => {
-          popupComponent.update(item);
+        .then((data) => {
+          popupComponent.update(data);
           popupComponent.unbind();
           popupComponent.partialUpdate();
           popupComponent.bind();

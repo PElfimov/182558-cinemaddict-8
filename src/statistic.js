@@ -44,8 +44,7 @@ export default class Statistic {
     this._totalDurationHours = moment.duration(time, `minutes`).hours();
     this._totalDurationMinutes = moment.duration(time, `minutes`).minutes();
     this._gengeColection = [...gengeSet];
-    // eslint-disable-next-line no-unused-vars
-    Object.entries(gengeOdj).forEach((element, index) => {
+    Object.entries(gengeOdj).forEach((element) => {
       this._gengeColectionData.push(element[1]);
     });
     const maxtCountgenge = Math.max(...this._gengeColectionData);
@@ -127,7 +126,6 @@ export default class Statistic {
     // Обязательно рассчитайте высоту canvas, она зависит от количества элементов диаграммы
     const BAR_HEIGHT = 50;
     statisticCtx.height = BAR_HEIGHT * 5;
-    // eslint-disable-next-line no-unused-vars
     const myChart = new Chart(statisticCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,

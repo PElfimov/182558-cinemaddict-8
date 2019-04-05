@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 import Filter from './filter.js';
 import {
   getCardCollectionsMarkup
@@ -92,6 +91,7 @@ const filterTasks = (filterName, dataColection) => {
       mainConteiner.appendChild(ststistikElement);
       stattistik.renderStat();
   }
+  return null;
 };
 
 const addFilterr = (tasks) => FILTERS_NAME.forEach((item) => {

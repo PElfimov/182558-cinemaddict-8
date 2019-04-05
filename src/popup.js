@@ -1,6 +1,3 @@
-/* eslint-disable no-unused-expressions */
-/* eslint-disable no-undef */
-/* eslint-disable no-return-assign */
 import Component from './component.js';
 import moment from "moment";
 
@@ -51,7 +48,9 @@ export default class Popup extends Component {
 
     for (const pair of formData.entries()) {
       let [property, value] = pair;
-      (property === `comment-emoji`) && (property = `emoji`);
+      if (property === `comment-emoji`) {
+        property = `emoji`;
+      }
       if (taskEditMapper[property]) {
         taskEditMapper[property](value);
       }
@@ -87,8 +86,9 @@ export default class Popup extends Component {
       evt.preventDefault();
       const formData = new FormData(this._element.querySelector(`.film-details__inner`));
       const newData = this._processForm(formData);
-
-      typeof this._onSentComment === `function` && this._onSentComment(newData);
+      if (typeof this._onSentComment === `function`) {
+        this._onSentComment(newData);
+      }
     }
   }
 
@@ -280,12 +280,24 @@ export default class Popup extends Component {
   static createMapper(target) {
 
     return {
-      watched: (value) => target.filmDetailsControl.watched = value,
-      watchlist: (value) => target.filmDetailsControl.watchlist = value,
-      favorite: (value) => target.filmDetailsControl.favorite = value,
-      emoji: (value) => target.coment.emoji = value,
-      comment: (value) => target.coment.text = value,
-      score: (value) => target.yourScore = value,
+      watched: (value) => {
+        return (target.filmDetailsControl.watched = value);
+      },
+      watchlist: (value) => {
+        return (target.filmDetailsControl.watchlist = value);
+      },
+      favorite: (value) => {
+        return (target.filmDetailsControl.favorite = value);
+      },
+      emoji: (value) => {
+        return (target.coment.emoji = value);
+      },
+      comment: (value) => {
+        return (target.coment.text = value);
+      },
+      score: (value) => {
+        return (target.yourScore = value);
+      },
     };
   }
 
@@ -323,8 +335,8 @@ export default class Popup extends Component {
     if (!this._shakeStyleEnebled) {
       this._shakeStyleEnebled = true;
       document.querySelector(`head`).insertAdjacentHTML(`beforeend`, template);
-    }!element.classList.contains(`shake`) ? element.classList.add(`shake`) : element.classList.remove(`shake`);
-
+    }
+    element.classList.toggle(`shake`);
   }
 
   shakeReitingForm() {
