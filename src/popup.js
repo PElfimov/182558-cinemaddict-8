@@ -51,9 +51,11 @@ export default class Popup extends Component {
 
     for (const pair of formData.entries()) {
       let [property, value] = pair;
-      // eslint-disable-next-line no-unused-expressions
       (property === `comment-emoji`) && (property = `emoji`);
-      taskEditMapper[property] && taskEditMapper[property](value);
+      if (taskEditMapper[property]) {
+        taskEditMapper[property](value);
+      }
+
     }
     entry.coment.day = moment();
     entry.coment.author = this._userName;
@@ -64,8 +66,10 @@ export default class Popup extends Component {
     evt.preventDefault();
     const formData = new FormData(this._element.querySelector(`.film-details__inner`));
     const newData = this._processForm(formData);
-    // eslint-disable-next-line no-unused-expressions
-    typeof this._onEdit === `function` && this._onEdit(newData);
+    if (typeof this._onEdit === `function`) {
+      this._onEdit(newData);
+    }
+
     this.update(newData);
   }
 
@@ -73,8 +77,9 @@ export default class Popup extends Component {
     evt.preventDefault();
     const newData = {};
     newData.yourScore = evt.target.innerText;
-    // eslint-disable-next-line no-unused-expressions
-    typeof this._onRadioButton === `function` && this._onRadioButton(newData);
+    if (typeof this._onRadioButton === `function`) {
+      this._onRadioButton(newData);
+    }
   }
 
   _onSentCommentKeyDown(evt) {
@@ -82,7 +87,7 @@ export default class Popup extends Component {
       evt.preventDefault();
       const formData = new FormData(this._element.querySelector(`.film-details__inner`));
       const newData = this._processForm(formData);
-      // eslint-disable-next-line no-unused-expressions
+
       typeof this._onSentComment === `function` && this._onSentComment(newData);
     }
   }
@@ -273,7 +278,7 @@ export default class Popup extends Component {
 
 
   static createMapper(target) {
-    // eslint-disable-next-line no-unused-expressions
+
     return {
       watched: (value) => target.filmDetailsControl.watched = value,
       watchlist: (value) => target.filmDetailsControl.watchlist = value,

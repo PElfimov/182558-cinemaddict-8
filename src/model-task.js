@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+
 // //////////////
 // model-task.js
 // //////////////
@@ -47,29 +47,29 @@ export default class ModelTask {
     });
     return {
       id: this.number,
-      film_info: {
-        title: this.filmTitle,
-        alternative_title: this.alternativeTitle,
+      [`film_info`]: {
+        [`title`]: this.filmTitle,
+        [`alternative_title`]: this.alternativeTitle,
         release: {
-          date: this.yearOfIssue,
-          release_country: this.country
+          [`date`]: this.yearOfIssue,
+          [`release_country`]: this.country
         },
-        runtime: this.duration,
-        genre: this.genre,
-        poster: this.imgUrl,
-        description: this.description,
-        director: this.director,
-        actors: this.actors,
-        age_rating: this.age,
-        total_rating: this.rating,
-        writers: this.writers
+        [`runtime`]: this.duration,
+        [`genre`]: this.genre,
+        [`poster`]: this.imgUrl,
+        [`description`]: this.description,
+        [`director`]: this.director,
+        [`actors`]: this.actors,
+        [`age_rating`]: this.age,
+        [`total_rating`]: this.rating,
+        [`writers`]: this.writers
       },
       comments: newArrComents,
-      user_details: {
-        watchlist: this.filmDetailsControl.watchlist,
-        already_watched: this.filmDetailsControl.watched,
-        favorite: this.filmDetailsControl.favorite,
-        personal_rating: this.yourScore,
+      [`user_details`]: {
+        [`watchlist`]: this.filmDetailsControl.watchlist,
+        [`already_watched`]: this.filmDetailsControl.watched,
+        [`favorite`]: this.filmDetailsControl.favorite,
+        [`personal_rating`]: this.yourScore,
       }
     };
   }

@@ -37,20 +37,24 @@ const onError = (error) => {
 };
 
 const delClass = (className, object) => {
-  // eslint-disable-next-line no-unused-expressions
-  object.classList.contains(className) && object.classList.remove(className);
+  if (object.classList.contains(className)) {
+    object.classList.remove(className);
+  }
 };
 
 const addClass = (className, object) => {
-  // eslint-disable-next-line no-unused-expressions
-  !object.classList.contains(className) && object.classList.add(className);
+  if (!object.classList.contains(className)) {
+    object.classList.add(className);
+  }
+
 };
 
 const dellElement = (className) => {
-  // eslint-disable-next-line no-unused-expressions
-  mainConteiner.querySelector(className) && mainConteiner.querySelector(className).remove();
-};
 
+  if (mainConteiner.querySelector(className)) {
+    mainConteiner.querySelector(className).remove();
+  }
+};
 /**
  * Сортировка фильмов фильтром
  * @param {string} filterName Имя фильтра
@@ -86,8 +90,7 @@ const filterTasks = (filterName, dataColection) => {
       const stattistik = new Statistic(dataColection);
       const ststistikElement = stattistik.render();
       mainConteiner.appendChild(ststistikElement);
-      // eslint-disable-next-line no-unused-expressions
-      stattistik.renderStat;
+      stattistik.renderStat();
   }
 };
 
@@ -101,8 +104,9 @@ const addFilterr = (tasks) => FILTERS_NAME.forEach((item) => {
   filterContainer.appendChild(filterComponent.render());
   filterComponent.onFilter = (data) => {
     removeCard();
-    // eslint-disable-next-line no-unused-expressions
-    filterTasks(data, tasks) && addCardOnPage(filterTasks(data, tasks));
+    if (filterTasks(data, tasks)) {
+      addCardOnPage(filterTasks(data, tasks));
+    }
   };
 });
 
