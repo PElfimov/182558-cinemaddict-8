@@ -28,17 +28,21 @@ export default class Statistic {
     let time = 0;
     const gengeOdj = {};
     const gengeSet = new Set();
-
     this._tempCollection.forEach((element) => {
       time += element.duration;
-      gengeSet.add(element.genre);
+      element.genre.forEach((it) => {
+        gengeSet.add(it);
+      });
+
     });
     [...gengeSet].forEach((element) => {
       gengeOdj[element] = 0;
     });
 
     this._tempCollection.forEach((element) => {
-      gengeOdj[element.genre]++;
+      element.genre.forEach((it) => {
+        gengeOdj[it]++;
+      });
     });
 
     this._totalDurationHours = moment.duration(time, `minutes`).hours();
@@ -182,6 +186,7 @@ export default class Statistic {
         }
       }
     });
+    myChart();
   }
 
 
