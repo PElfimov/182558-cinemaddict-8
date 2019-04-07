@@ -3,6 +3,7 @@ import {
   getCardCollectionsMarkup
 } from './render';
 import Statistic from './statistic';
+import Search from './search';
 import API from './api';
 
 /**
@@ -49,11 +50,11 @@ const addClass = (className, object) => {
 };
 
 const dellElement = (className) => {
-
   if (mainConteiner.querySelector(className)) {
     mainConteiner.querySelector(className).remove();
   }
 };
+
 /**
  * Сортировка фильмов фильтром
  * @param {string} filterName Имя фильтра
@@ -94,6 +95,11 @@ const filterTasks = (filterName, dataColection) => {
   return null;
 };
 
+/**
+ * Добавление фильтров на страницу
+ * @param {object} tasks данные для фильтрации
+ * @return {object} Отрисованные карточки фильмов .
+ */
 const addFilterr = (tasks) => FILTERS_NAME.forEach((item) => {
   const filterData = Object.assign({}, {
     name: item,
@@ -112,6 +118,23 @@ const addFilterr = (tasks) => FILTERS_NAME.forEach((item) => {
 
 
 /**
+ * Добавление стоки поиска на страницу
+ * @param {object} data данные для поиск
+ */
+const addSearchElement = (data) => {
+  const headerContainer = document.querySelector(`.header`);
+  const searchContainer = headerContainer.querySelector(`form`);
+  const searchComponent = new Search(data);
+  headerContainer.replaceChild(searchComponent.render(), searchContainer);
+  // searchContainer.onSearch = (data) => {
+  //   removeCard();
+  //   if (filterTasks(data, tasks)) {
+  //     addCardOnPage(filterTasks(data, tasks));
+  //   }
+  // };
+};
+
+/**
  * Вставка карточек на страницу
  * @param {object} data данные для отрисовки
  */
@@ -128,6 +151,7 @@ api.getTasks()
   .then((tasks) => {
     textAlert.remove();
     addCardOnPage(tasks);
+    addSearchElement(tasks);
     addFilterr(tasks);
   })
   .catch(onError);
