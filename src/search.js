@@ -25,12 +25,9 @@ export default class Search extends Component {
 
   _onSearchKeyDown(evn) {
     evn.preventDefault();
-    console.log(evn.target.value);
-
-    // const filtersName = this._name;
-    // if (typeof this._onFilter === `function`) {
-    //   this._onFilter(filtersName);
-    // }
+    if (typeof this._onSearch === `function`) {
+      this._onSearch(evn.target.value);
+    }
   }
 
   set onSearch(fn) {

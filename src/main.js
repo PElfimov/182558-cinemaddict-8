@@ -5,6 +5,8 @@ import {
 import Statistic from './statistic';
 import Search from './search';
 import API from './api';
+import * as _ from 'lodash';
+
 
 /**
  * Удаление карточек со сроницы
@@ -116,6 +118,21 @@ const addFilterr = (tasks) => FILTERS_NAME.forEach((item) => {
   };
 });
 
+/**
+ * Живая фильтрация списка фильмов
+ * @param {object} data данные для поиска
+ * @param {string} stringSerch строка поиска
+ * @return {object} массив объектов
+ */
+const filterSearch = (data, stringSerch) => {
+  const newData = _.filter(data, (item) => {
+    const title = _.lowerCase(item.filmTitle);
+    const string = _.lowerCase(stringSerch);
+    const result = title.includes(string);
+    return result;
+  });
+  return newData;
+};
 
 /**
  * Добавление стоки поиска на страницу
@@ -126,13 +143,14 @@ const addSearchElement = (data) => {
   const searchContainer = headerContainer.querySelector(`form`);
   const searchComponent = new Search(data);
   headerContainer.replaceChild(searchComponent.render(), searchContainer);
-  // searchContainer.onSearch = (data) => {
-  //   removeCard();
-  //   if (filterTasks(data, tasks)) {
-  //     addCardOnPage(filterTasks(data, tasks));
-  //   }
-  // };
+  searchComponent.onSearch = (stringSerch) => {
+    removeCard();
+    if (filterSearch(data, stringSerch)) {
+      addCardOnPage(filterSearch(data, stringSerch));
+    }
+  };
 };
+
 
 /**
  * Вставка карточек на страницу
