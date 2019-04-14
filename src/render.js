@@ -22,12 +22,12 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
     };
 
     cardComponent.onButtonClick = (newObject) => {
+      item.filmDetailsControl = newObject;
       api.updateTask({
         id: item.number,
         data: item.toRAW()
       })
         .then((data) => {
-          item.filmDetailsControl = newObject;
           popupComponent.update(data);
         });
     };
