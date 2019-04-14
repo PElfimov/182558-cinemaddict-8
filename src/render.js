@@ -73,7 +73,9 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
           cardComponent.unbind();
           cardComponent.partialUpdate();
           cardComponent.bind();
-          popupContainer.removeChild(popupComponent.element);
+          if (popupComponent.element) {
+            popupContainer.removeChild(popupComponent.element);
+          }
           popupComponent.unrender();
         });
 

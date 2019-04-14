@@ -27,6 +27,7 @@ export default class Popup extends Component {
     this._onEditRadioButtonClick = this._onEditRadioButtonClick.bind(this);
     this._onSentCommentKeyDown = this._onSentCommentKeyDown.bind(this);
     this._onClickUndo = this._onClickUndo.bind(this);
+    this._onEsk =   this._onEsk.bind(this);
     this._shakeStyleEnebled = false;
     this._commentStatus = ``;
   }
@@ -69,6 +70,12 @@ export default class Popup extends Component {
     newData.commentStatus = ``;
     if (typeof this._onEdit === `function`) {
       this._onEdit(newData);
+    }
+  }
+
+  _onEsk(evt) {
+    if (evt.keyCode === 27) {
+      this._onEditButtonClick(evt);
     }
   }
 
@@ -408,7 +415,7 @@ export default class Popup extends Component {
       .addEventListener(`click`, this._onClickUndo);
     this._element.querySelector(`.film-details__comment-input`)
       .addEventListener(`keydown`, this._onSentCommentKeyDown);
-
+    document.addEventListener(`keydown`, this._onEsk);
     this._element.querySelectorAll(`.film-details__user-rating-label`).forEach((elem) => {
       elem.addEventListener(`click`, this._onEditRadioButtonClick);
     });
@@ -422,6 +429,7 @@ export default class Popup extends Component {
     this._element.querySelectorAll(`.film-details__user-rating-label`).forEach((elem) => {
       elem.removeEventListener(`click`, this._onEditRadioButtonClick);
     });
+    document.removeEventListener(`keydown`, this._onEsk);
   }
 
   update(data) {
