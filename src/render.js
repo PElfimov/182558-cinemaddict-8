@@ -17,7 +17,6 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
     const cardComponent = new Card(item);
     const popupComponent = new Popup(item);
     cardContainer.appendChild(cardComponent.render());
-
     cardComponent.onEdit = () => {
       popupContainer.appendChild(popupComponent.render());
     };
@@ -33,16 +32,44 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
         });
     };
 
-    popupComponent.onEdit = (newObject) => {
+    popupComponent.onUndo = (newData) => {
+      item.coments = [...newData];
 
-      item.filmDetailsControl = newObject.filmDetailsControl;
+      popupComponent.block();
       api.updateTask({
         id: item.number,
         data: item.toRAW()
       })
         .then((data) => {
-          data.coment = newObject.coment;
+          data.commentStatus = `Comment deleted`;
+          popupComponent.update(data);
+          popupComponent.unbind();
+          popupComponent.partialUpdate();
+          popupComponent.bind();
+          popupComponent.unblock();
+        })
+        .catch(() => {
+          popupComponent.unblock();
+        });
+    };
+
+
+    popupComponent.onEdit = (newObject) => {
+
+      item.filmDetailsControl = newObject.filmDetailsControl;
+      if (newObject.coment.text) {
+        item.coments.push(newObject.coment);
+      }
+      api.updateTask({
+        id: item.number,
+        data: item.toRAW()
+      })
+        .then((data) => {
+          if (newObject.coment) {
+            data.coment = newObject.coment;
+          }
           cardComponent.update(data);
+          popupComponent.update(data);
           cardComponent.unbind();
           cardComponent.partialUpdate();
           cardComponent.bind();
@@ -54,24 +81,26 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
 
     popupComponent.onSentComment = (newObject) => {
       popupComponent.block();
-      item.filmDetailsControl = newObject.filmDetailsControl;
+      if (newObject.coment.text) {
+        item.coments.push(newObject.coment);
+      }
       api.updateTask({
         id: item.number,
         data: item.toRAW()
       })
         .then((data) => {
-          data.coment = newObject.coment;
+          data.commentStatus = newObject.commentStatus;
           popupComponent.update(data);
           popupComponent.unbind();
           popupComponent.partialUpdate();
           popupComponent.bind();
           popupComponent.unblock();
+          popupComponent.showUndo();
         })
-        .catch(()=>{
+        .catch(() => {
           popupComponent.shakeReitingTextForm();
           popupComponent.unblock();
         });
-
     };
 
     popupComponent.onRadioButton = (newObject) => {
@@ -88,7 +117,7 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
           popupComponent.bind();
           popupComponent.unblock();
         })
-        .catch(()=>{
+        .catch(() => {
           popupComponent.shakeReitingForm();
           popupComponent.unblock();
         });

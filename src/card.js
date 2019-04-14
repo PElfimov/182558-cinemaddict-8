@@ -91,9 +91,7 @@ export default class Card extends Component {
   }
 
   update(data) {
-    if (data.coment.text) {
-      this._coments.push(data.coment);
-    }
+    this._coments = data.coments;
     this._commentsCoutn = this._coments.length;
     this._filmDetailsControl = data.filmDetailsControl;
   }

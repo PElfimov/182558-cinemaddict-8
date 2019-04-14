@@ -1,5 +1,6 @@
 import Component from './component.js';
 import moment from "moment";
+import * as _ from 'lodash';
 
 export default class Popup extends Component {
   constructor(data) {
@@ -25,8 +26,9 @@ export default class Popup extends Component {
     this._releaseDate = moment(this._yearOfIssue).format(`Do MMMM YYYY`);
     this._onEditRadioButtonClick = this._onEditRadioButtonClick.bind(this);
     this._onSentCommentKeyDown = this._onSentCommentKeyDown.bind(this);
+    this._onClickUndo = this._onClickUndo.bind(this);
     this._shakeStyleEnebled = false;
-
+    this._commentStatus = ``;
   }
 
 
@@ -54,7 +56,6 @@ export default class Popup extends Component {
       if (taskEditMapper[property]) {
         taskEditMapper[property](value);
       }
-
     }
     entry.coment.day = moment();
     entry.coment.author = this._userName;
@@ -65,11 +66,10 @@ export default class Popup extends Component {
     evt.preventDefault();
     const formData = new FormData(this._element.querySelector(`.film-details__inner`));
     const newData = this._processForm(formData);
+    newData.commentStatus = ``;
     if (typeof this._onEdit === `function`) {
       this._onEdit(newData);
     }
-
-    this.update(newData);
   }
 
   _onEditRadioButtonClick(evt) {
@@ -86,11 +86,26 @@ export default class Popup extends Component {
       evt.preventDefault();
       const formData = new FormData(this._element.querySelector(`.film-details__inner`));
       const newData = this._processForm(formData);
+      newData.commentStatus = `Comment added`;
       if (typeof this._onSentComment === `function`) {
         this._onSentComment(newData);
       }
     }
   }
+
+  _onClickUndo(evt) {
+    evt.preventDefault();
+    this._coments = _.dropRight(this._coments);
+    if (typeof this._onUndo === `function`) {
+      this._onUndo(this._coments);
+    }
+  }
+
+
+  set onUndo(fn) {
+    this._onUndo = fn;
+  }
+
 
   set onSentComment(fn) {
     this._onSentComment = fn;
@@ -113,6 +128,22 @@ export default class Popup extends Component {
     }
     return name;
 
+  }
+
+  hideUndo() {
+    const object = this._element.querySelector(`.film-details__watched-reset`);
+    const className = `visually-hidden`;
+    if (object.classList.contains(className)) {
+      object.classList.add(className);
+    }
+  }
+
+  showUndo() {
+    const object = this._element.querySelector(`.film-details__watched-reset`);
+    const className = `visually-hidden`;
+    if (object.classList.contains(className)) {
+      object.classList.remove(className);
+    }
   }
 
   get comentColection() {
@@ -138,7 +169,7 @@ export default class Popup extends Component {
     let ratingColect = ``;
     for (let i = 0; i < 10; i++) {
       ratingColect += `
-        <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${i}" id="rating-${i}" ${ i === Math.round(+cheskCount) ? `checked` : ``}>
+        <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${i}" id="rating-${i}" ${i === Math.round(+cheskCount) ? `checked` : ``}>
         <label class="film-details__user-rating-label" for="rating-${i}">${i}</label>`;
     }
     return ratingColect;
@@ -157,7 +188,6 @@ export default class Popup extends Component {
 
               <p class="film-details__age">Age ${this._age} +</p>
             </div>
-
             <div class="film-details__info">
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
@@ -205,7 +235,7 @@ export default class Popup extends Component {
                 </tr>
               </table>
 
-              <p class="film-details__film-description">${this._description }
+              <p class="film-details__film-description">${this._description}
               </p>
             </div>
           </div>
@@ -252,8 +282,8 @@ export default class Popup extends Component {
 
           <section class="film-details__user-rating-wrap">
             <div class="film-details__user-rating-controls">
-              <span class="film-details__watched-status film-details__watched-status--active">Already watched</span>
-              <button class="film-details__watched-reset" type="button">undo</button>
+              <span class="film-details__watched-status film-details__watched-status--active ">${this._commentStatus}</span>
+              <button class="film-details__watched-reset visually-hidden" type="button">undo</button>
             </div>
 
             <div class="film-details__user-score">
@@ -267,7 +297,7 @@ export default class Popup extends Component {
                 <p class="film-details__user-rating-feelings">How you feel it?</p>
 
                 <div class="film-details__user-rating-score">
-                  ${this._ratingColection(this._yourScore) }
+                  ${this._ratingColection(this._yourScore)}
                 </div>
               </section>
             </div>
@@ -374,6 +404,8 @@ export default class Popup extends Component {
   bind() {
     this._element.querySelector(this._closeBtnClass)
       .addEventListener(`click`, this._onEditButtonClick);
+    this._element.querySelector(`.film-details__watched-reset`)
+      .addEventListener(`click`, this._onClickUndo);
     this._element.querySelector(`.film-details__comment-input`)
       .addEventListener(`keydown`, this._onSentCommentKeyDown);
 
@@ -385,6 +417,8 @@ export default class Popup extends Component {
   unbind() {
     this._element.querySelector(this._closeBtnClass)
       .removeEventListener(`click`, this._onEditButtonClick);
+    this._element.querySelector(`.film-details__watched-reset`)
+      .removeEventListener(`click`, this._onClickUndo);
     this._element.querySelectorAll(`.film-details__user-rating-label`).forEach((elem) => {
       elem.removeEventListener(`click`, this._onEditRadioButtonClick);
     });
@@ -397,8 +431,12 @@ export default class Popup extends Component {
     if (data.filmDetailsControl) {
       this._filmDetailsControl = data.filmDetailsControl;
     }
-    if (data.coment) {
-      this._coments.push(data.coment);
+    this._coments = data.coments;
+    if (data.commentStatus) {
+      this._commentStatus = data.commentStatus;
+    } else {
+      this._commentStatus = ``;
     }
+
   }
 }
