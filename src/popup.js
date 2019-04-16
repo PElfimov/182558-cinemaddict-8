@@ -27,7 +27,7 @@ export default class Popup extends Component {
     this._onEditRadioButtonClick = this._onEditRadioButtonClick.bind(this);
     this._onSentCommentKeyDown = this._onSentCommentKeyDown.bind(this);
     this._onClickUndo = this._onClickUndo.bind(this);
-    this._onEsk =   this._onEsk.bind(this);
+    this._onEsk = this._onEsk.bind(this);
     this._shakeStyleEnebled = false;
     this._commentStatus = ``;
   }
