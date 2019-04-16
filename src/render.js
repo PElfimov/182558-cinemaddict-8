@@ -3,7 +3,9 @@ import Popup from "./popup.js";
 import {
   api
 } from "./main.js";
-
+import {
+  addReitingOnPage
+} from './user-rating';
 
 /**
  * Подготовка списка карточек из колекции элементов .
@@ -29,6 +31,7 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
       })
         .then((data) => {
           popupComponent.update(data);
+          addReitingOnPage(dataColection);
         });
     };
 
@@ -47,6 +50,7 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
           popupComponent.partialUpdate();
           popupComponent.bind();
           popupComponent.unblock();
+          addReitingOnPage(dataColection);
         })
         .catch(() => {
           popupComponent.unblock();
@@ -77,6 +81,7 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
             popupContainer.removeChild(popupComponent.element);
           }
           popupComponent.unrender();
+          addReitingOnPage(dataColection);
         });
 
     };
@@ -98,6 +103,7 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
           popupComponent.bind();
           popupComponent.unblock();
           popupComponent.showUndo();
+          addReitingOnPage(dataColection);
         })
         .catch(() => {
           popupComponent.shakeReitingTextForm();
@@ -118,6 +124,7 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
           popupComponent.partialUpdate();
           popupComponent.bind();
           popupComponent.unblock();
+          addReitingOnPage(dataColection);
         })
         .catch(() => {
           popupComponent.shakeReitingForm();

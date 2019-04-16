@@ -2,6 +2,9 @@ import Filter from './filter.js';
 import {
   getCardCollectionsMarkup
 } from './render';
+import {
+  addReitingOnPage
+} from './user-rating';
 import Statistic from './statistic';
 import Search from './search';
 import API from './api';
@@ -171,6 +174,7 @@ api.getTasks()
     addCardOnPage(tasks);
     addSearchElement(tasks);
     addFilterr(tasks);
+    addReitingOnPage(tasks);
   })
   .catch(onError);
 
