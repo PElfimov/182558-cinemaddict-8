@@ -1,7 +1,7 @@
 import Card from "./card.js";
 import Popup from "./popup.js";
 import {
-  api
+  api, addFilterr, removeCard
 } from "./main.js";
 import {
   addReitingOnPage
@@ -31,6 +31,8 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
       })
         .then((data) => {
           popupComponent.update(data);
+          removeCard(`.main-navigation__item`);
+          addFilterr(dataColection);
           addReitingOnPage(dataColection);
         });
     };
@@ -50,6 +52,8 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
           popupComponent.partialUpdate();
           popupComponent.bind();
           popupComponent.unblock();
+          removeCard(`.main-navigation__item`);
+          addFilterr(dataColection);
           addReitingOnPage(dataColection);
         })
         .catch(() => {
@@ -81,6 +85,8 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
             popupContainer.removeChild(popupComponent.element);
           }
           popupComponent.unrender();
+          removeCard(`.main-navigation__item`);
+          addFilterr(dataColection);
           addReitingOnPage(dataColection);
         });
 
@@ -104,6 +110,8 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
           popupComponent.unblock();
           popupComponent.showUndo();
           addReitingOnPage(dataColection);
+          removeCard(`.main-navigation__item`);
+          addFilterr(dataColection);
         })
         .catch(() => {
           popupComponent.shakeReitingTextForm();
@@ -124,6 +132,8 @@ const getCardCollectionsMarkup = (dataColection, cardContainer, popupContainer) 
           popupComponent.partialUpdate();
           popupComponent.bind();
           popupComponent.unblock();
+          removeCard(`.main-navigation__item`);
+          addFilterr(dataColection);
           addReitingOnPage(dataColection);
         })
         .catch(() => {

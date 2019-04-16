@@ -13,9 +13,10 @@ import * as _ from 'lodash';
 
 /**
  * Удаление карточек со сроницы
+ * @param {string} selector селектор
  */
-const removeCard = () => {
-  document.querySelectorAll(`.film-card`).forEach((elem) => {
+const removeCard = (selector) => {
+  document.querySelectorAll(selector).forEach((elem) => {
     elem.remove();
   });
 };
@@ -24,6 +25,7 @@ const removeCard = () => {
 const filterContainer = document.querySelector(`.main-navigation`);
 const filmConteiner = document.querySelector(`.films`);
 const mainConteiner = document.querySelector(`.main`);
+const futerStatics = document.querySelector(`.footer__statistics`);
 const FILTERS_NAME = [`all movies`, `watchlist`, `history`, `favorites`, `stats`];
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
 const END_POINT = `https://es8-demo-srv.appspot.com/moowle/`;
@@ -100,6 +102,39 @@ const filterTasks = (filterName, dataColection) => {
   return null;
 };
 
+
+/**
+ * Счетчик фильма.
+ * @param {object} collection коллекция объектов.
+ * @param {string} name имя фильтра
+ * @return {number}  cчетчик фильтра.
+ */
+const getCountFilter = (collection, name) => {
+  let count = 0;
+  switch (name) {
+    case (`all movies`):
+      name = `Movie buff`;
+      break;
+    case (`watchlist`):
+      name = `watchlist`;
+      break;
+    case (`history`):
+      name = `watched`;
+      break;
+    case (`favorites`):
+      name = `favorite`;
+      break;
+
+  }
+  collection.forEach((element) => {
+    if (element.filmDetailsControl[name]) {
+      count++;
+    }
+  });
+
+  return count;
+};
+
 /**
  * Добавление фильтров на страницу
  * @param {object} tasks данные для фильтрации
@@ -108,13 +143,12 @@ const filterTasks = (filterName, dataColection) => {
 const addFilterr = (tasks) => FILTERS_NAME.forEach((item) => {
   const filterData = Object.assign({}, {
     name: item,
-    count: 5
+    count: getCountFilter(tasks, item)
   });
   const filterComponent = new Filter(filterData);
-
   filterContainer.appendChild(filterComponent.render());
   filterComponent.onFilter = (data) => {
-    removeCard();
+    removeCard(`.film-card`);
     if (filterTasks(data, tasks)) {
       addCardOnPage(filterTasks(data, tasks));
     }
@@ -147,7 +181,7 @@ const addSearchElement = (data) => {
   const searchComponent = new Search(data);
   headerContainer.replaceChild(searchComponent.render(), searchContainer);
   searchComponent.onSearch = (stringSerch) => {
-    removeCard();
+    removeCard(`.film-card`);
     if (filterSearch(data, stringSerch)) {
       addCardOnPage(filterSearch(data, stringSerch));
     }
@@ -160,7 +194,7 @@ const addSearchElement = (data) => {
  * @param {object} data данные для отрисовки
  */
 const addCardOnPage = (data) => {
-  removeCard();
+  removeCard(`.film-card`);
   const cardContainer = document.querySelectorAll(`.films-list__container`);
   const popupContainer = document.querySelector(`body`);
   getCardCollectionsMarkup(data, cardContainer[0], popupContainer);
@@ -173,12 +207,16 @@ api.getTasks()
     textAlert.remove();
     addCardOnPage(tasks);
     addSearchElement(tasks);
+    removeCard(`.main-navigation__item`);
     addFilterr(tasks);
     addReitingOnPage(tasks);
+    futerStatics.insertAdjacentHTML(`afterBegin`, `<p>${tasks.length} movies inside</p>`);
   })
   .catch(onError);
 
 
 export {
-  api
+  api, addFilterr, removeCard
 };
+
+
